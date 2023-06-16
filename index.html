@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    #card-preview {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    #card-preview img {
+      max-width: 100px;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    table td, table th {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="card-form">
+    <label for="bank-name">Название банка:</label>
+    <input type="text" id="bank-name" required><br>
+
+    <label for="payment-system">Тип платежной системы:</label>
+    <select id="payment-system" required>
+      <option value="visa">Visa</option>
+      <option value="mastercard">Mastercard</option>
+      <option value="amex">American Express</option>
+    </select><br>
+
+    <label for="card-number">Номер карты:</label>
+    <input type="text" id="card-number" pattern="[0-9]{16}" maxlength="16" required><br>
+
+    <label for="card-holder">Имя держателя карты:</label>
+    <input type="text" id="card-holder" required><br>
+
+    <label for="expiration-date">Месяц и год окончания карты:</label>
+    <input type="month" id="expiration-date" required><br>
+
+    <button type="submit">Отправить</button>
+  </form>
+
+  <div id="card-preview">
+    <h3>Миниатюра банковской карты</h3>
+    <img id="card-logo" src="" alt="Логотип платежной системы">
+    <p id="card-bank"></p>
+  </div>
+
+  <table id="card-table">
+    <thead>
+      <tr>
+        <th>Название банка</th>
+        <th>Тип платежной системы</th>
+        <th>Номер карты</th>
+        <th>Имя держателя карты</th>
+        <th>Месяц и год окончания карты</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('card-form');
+    const previewContainer = document.getElementById('card-preview');
+    const cardLogo = document.getElementById('card-logo');
+    const cardBank = document.getElementById('card-bank');
+    const tableBody = document.querySelector('#card-table tbody');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const bankName = document.getElementById('bank-name').value;
+      const paymentSystem = document.getElementById('payment-system').value;
+      const cardNumber = document.getElementById('card-number').value;
+      const cardHolder = document.getElementById('card-holder').value;
+      const expirationDate = document.getElementById('expiration-date').value;
+
+      const row = document.createElement('tr');
+      const bankCell = document.createElement('td');
+      const paymentSystemCell = document.createElement('td');
+      const cardNumberCell = document.createElement('td');
+      const cardHolderCell = document.createElement('td');
+      const expirationDateCell = document.createElement('td');
+
+      bankCell.textContent = bankName;
+      paymentSystemCell.textContent = paymentSystem;
+      cardNumberCell.textContent = cardNumber;
+      cardHolderCell.textContent = cardHolder;
+      expirationDateCell.textContent = expirationDate;
+
+      row.appendChild(bankCell);
+      row.appendChild(paymentSystemCell);
+      row.appendChild(cardNumberCell);
+      row.appendChild(cardHolderCell);
+      row.appendChild(expirationDateCell);
+
+      tableBody.appendChild(row);
+
+      form.reset();
+      previewContainer.style.display = 'none';
+      cardLogo.src = '';
+      cardBank.textContent = '';
+    });
+
+    form.addEventListener('input', function() {
+      const bankName = document.getElementById('bank-name').value;
+      const paymentSystem = document.getElementById('payment-system').value;
+      const cardLogoPath = getCardLogoPath(paymentSystem);
+
+      cardBank.textContent = bankName;
+      cardLogo.src = cardLogoPath;
+      previewContainer.style.display = 'block';
+    });
+
+    function getCardLogoPath(paymentSystem) {
+      if (paymentSystem === 'visa') {
+        return 'https://example.com/visa-logo.png';
+      } else if (paymentSystem === 'mastercard') {
+        return 'https://example.com/mastercard-logo.png';
+      } else if (paymentSystem === 'amex') {
+        return 'https://example.com/amex-logo.png';
+      } else {
+        return '';
+      }
+    }
+  </script>
+
+</body>
+</html>
